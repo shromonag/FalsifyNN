@@ -2,14 +2,27 @@
 
 from collections import namedtuple
 
-RoadDefn = namedtuple("road", "road_imageFile description vp_x vp_y")
-CarDefn = namedtuple("car", "car_imageFile description")
+ImageFile = namedtuple('ImageFile', 'data description')
 
-class road(RoadDefn):
+class road():
+	def __init__(self, ImageFile, vp, min_x, max_x, lanes):
+		self.componentType = 'Road'
+		self.data = ImageFile.data
+		self.description = ImageFile.description
+		self.vp = vp
+		self.min_x = min_x
+		self.max_x = max_x
+		self.lanes = lanes
+
 	def __repr__(self):
-		return "Picture : " + self.description + "\nVanishing Point : " + str([self.vp_x, self.vp_y])
+		return "Picture : " + self.description
 
 
-class car(CarDefn):
+class car():
+	def __init__(self, ImageFile):
+		self.componentType = 'Car'
+		self.data = ImageFile.data
+		self.description = ImageFile.description
+
 	def __repr__(self):
-		return self.description
+		return "Picture : " + self.description

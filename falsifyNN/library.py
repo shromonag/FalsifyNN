@@ -16,7 +16,7 @@ class library:
 		elif type == "cars":
 			return self.cars[number]
 		else:
-			return "Error"
+			return "Error: Search by either cars or roads"
 
 	def addRoad(self, *args):
 		self.roads.append(comp.road(*args))
