@@ -77,12 +77,10 @@ def classify():
         final_probs = [final_probs[idx] for idx in keep_idx]
         final_class = [final_class[idx] for idx in keep_idx]
 
-        return final_boxes, final_probs, final_class
+        return final_boxes,final_probs,final_class
 
 def main(argv=None):
-    final_boxes, final_probs, final_class = classify()
-    print(final_probs)
-    print(final_class)
+    final_boxes,final_probs,final_class = classify()
 
 
 if __name__ == '__main__':
