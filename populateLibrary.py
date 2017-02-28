@@ -64,4 +64,4 @@ new_image = generateImage(old_road.data, new_carimage, loc)
 ModifiedImage = modifyImageLook(new_image, 1, 1, 0.8, 1)
 
 ModifiedImage.show()
-ModifiedImage.save('new_image.png')
+ModifiedImage.save('PictureDump/new_image.png')
