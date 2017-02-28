@@ -72,9 +72,9 @@ def classify():
 
         return final_boxes,final_probs,final_class
 
-def main(argv=None):
-    final_boxes,final_probs,final_class = classify()
-
-
-if __name__ == '__main__':
-    tf.app.run()
+# def main(argv=None):
+#     final_boxes,final_probs,final_class = classify()
+#
+#
+# if __name__ == '__main__':
+#     tf.app.run()
