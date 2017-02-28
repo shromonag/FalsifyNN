@@ -61,6 +61,7 @@ car = Lib.getElement("cars", car_type)
 (loc, new_carimage) = shift_xz(old_road, car, 0.5, 0.5)
 
 new_image = generateImage(old_road.data, new_carimage, loc)
-ModifiedImage = modifyImageLook(new_image, 1, 1, 0.25, 1)
+ModifiedImage = modifyImageLook(new_image, 1, 1, 0.8, 1)
 
 ModifiedImage.show()
+ModifiedImage.save('new_image.png')
