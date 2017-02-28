@@ -57,11 +57,9 @@ print(new_road1.lanes)
 
 car = Lib.getElement("cars", car_type)
 
-
-(loc, new_carimage) = shift_xz(old_road, car, 0.5, 0.5)
-
-new_image = generateImage(old_road.data, new_carimage, loc)
-ModifiedImage = modifyImageLook(new_image, 1, 1, 0.8, 1)
-
-ModifiedImage.show()
-ModifiedImage.save('PictureDump/new_image.png')
+def generatePicture(params,pic_path):
+    (loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
+    new_image = generateImage(old_road.data, new_carimage, loc)
+    ModifiedImage = modifyImageLook(new_image, 1, 1, 0.8, 1)
+    #ModifiedImage.show()
+    ModifiedImage.save(pic_path)

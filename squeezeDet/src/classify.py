@@ -1,11 +1,4 @@
-# Author: Bichen Wu (bichen@berkeley.edu) 08/25/2016
-
-"""SqueezeDet Demo.
-
-In image detection mode, for a given image, detect objects and draw bounding
-boxes around them. In video detection mode, perform real-time detection on the
-video stream.
-"""
+# Author: Tommaso Dreossi (dreossi@berkeley.edu)
 
 from __future__ import absolute_import
 from __future__ import division
