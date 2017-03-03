@@ -7,4 +7,4 @@ from populateLibrary import generatePicture
 
 
 generatePicture((0.5,0.5),'./pics/out/new.png')
-classify()
+classify.classify()
