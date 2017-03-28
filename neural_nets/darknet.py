@@ -13,7 +13,6 @@ def startYolo():
 def yolo(image_path, process):
     process.sendline (image_path)
     process.expect('Enter Image Path:')
-    labels = ['car:','dog:']
     stream = process.before.decode("utf-8")
     return parseOut(stream)
 
