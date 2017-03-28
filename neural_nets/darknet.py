@@ -13,10 +13,26 @@ def startYolo():
 def yolo(image_path, process):
     process.sendline (image_path)
     process.expect('Enter Image Path:')
-    print(process.before)
+    labels = ['car:','dog:']
+    stream = process.before.decode("utf-8")
+    return parseOut(stream)
 
+# Parse yolo's output
+def parseOut(stream):
+    # Cut first part of uselsee stream
+    stream = stream.split('\n')
+    stream = stream[2:-2]
+
+    # Extract labels + confidence values
+    res = []
+    for prediction in stream:
+        space = prediction.find(': ')
+        label = prediction[0:space]
+        confidence = prediction[space+2:-2]
+        res.append((label,float(confidence)))
+    return res
 
 os.chdir(YOLO_PATH)
 process = startYolo()
-yolo('data/dog.jpg', process)
-yolo('data/dog.jpg', process)
+print(yolo('data/dog.jpg', process))
+print(yolo('data/dog.jpg', process))
