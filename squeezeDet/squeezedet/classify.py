@@ -23,7 +23,7 @@ FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string(
     'mode', 'image', """'image' or 'video'.""")
 tf.app.flags.DEFINE_string(
-    'checkpoint', './data/model_checkpoints/squeezeDet/model.ckpt-87000',
+    'checkpoint', './squeezeDet/data/model_checkpoints/squeezeDet/model.ckpt-87000',
     """Path to the model parameter file.""")
 tf.app.flags.DEFINE_string(
     'input_path', './data/sample.png',
