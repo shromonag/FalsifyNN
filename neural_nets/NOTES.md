@@ -9,8 +9,8 @@ wget https://www.dropbox.com/s/a6t3er8f03gdl4z/model_checkpoints.tgz
 tar -xzvf model_checkpoints.tgz
 rm model_checkpoints.tgz
 ```
-and create a ``__init__.py`` file in top folder
-```
-cd ..
-> __init.py___
-```
+[comment]: <> (and create a ``__init__.py`` file in top folder)
+[comment]: <> (```)
+[comment]: <> (cd ..)
+[comment]: <> (> __init.py___)
+[comment]: <> (```)
