@@ -1,6 +1,6 @@
 # Neural Nets Installations Notes
 
-## squeezeDet
+## SqueezeDet
 
 First time use - remeber to download the weights
 ```sh
@@ -14,3 +14,10 @@ rm model_checkpoints.tgz
 [comment]: <> (cd ..)
 [comment]: <> (> __init.py___)
 [comment]: <> (```)
+
+## KittyBox
+
+First time use - Download the weights by running
+```sh
+python demo.py --input_image data/demo.png
+```
