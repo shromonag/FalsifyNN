@@ -22,21 +22,10 @@ from nets import *
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string(
-    'mode', 'image', """'image' or 'video'.""")
-tf.app.flags.DEFINE_string(
-    'checkpoint', './squeezeDet/data/model_checkpoints/squeezeDet/model.ckpt-87000',
-    """Path to the model parameter file.""")
-tf.app.flags.DEFINE_string(
-    'input_path', './squeezeDet/data/sample.png',
-    """Input image or video to be detected. Can process glob input such as """
-    """./squeezeDet/data/00000*.png.""")
-tf.app.flags.DEFINE_string(
-    'out_dir', './squeezeDet/data/out/', """Directory to dump output image or video.""")
+tf.app.flags.DEFINE_string('mode', 'image', """'image' or 'video'.""")
+tf.app.flags.DEFINE_string('checkpoint', './squeezeDet/data/model_checkpoints/squeezeDet/model.ckpt-87000',"""Path to the model parameter file.""")
 
-
-def image_demo():
-  """Detect image."""
+def init():
 
   with tf.Graph().as_default():
     # Load model
@@ -46,63 +35,51 @@ def image_demo():
     mc.LOAD_PRETRAINED_MODEL = False
     model = SqueezeDet(mc, FLAGS.gpu)
 
+    # Start tensorflow session
     saver = tf.train.Saver(model.model_params)
+    sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+    saver.restore(sess, FLAGS.checkpoint)
 
-    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True)) as sess:
-      saver.restore(sess, FLAGS.checkpoint)
-
-
-      ##### TOM: here detections start
-
-      for f in glob.iglob(FLAGS.input_path):
-        im = cv2.imread(f)
-        im = im.astype(np.float32, copy=False)
-        im = cv2.resize(im, (mc.IMAGE_WIDTH, mc.IMAGE_HEIGHT))
-        input_image = im - mc.BGR_MEANS
-
-        # Detect
-        det_boxes, det_probs, det_class = sess.run(
-            [model.det_boxes, model.det_probs, model.det_class],
-            feed_dict={model.image_input:[input_image], model.keep_prob: 1.0})
-
-        # Filter
-        final_boxes, final_probs, final_class = model.filter_prediction(
-            det_boxes[0], det_probs[0], det_class[0])
-
-        keep_idx    = [idx for idx in range(len(final_probs)) \
-                          if final_probs[idx] > mc.PLOT_PROB_THRESH]
-        final_boxes = [final_boxes[idx] for idx in keep_idx]
-        final_probs = [final_probs[idx] for idx in keep_idx]
-        final_class = [final_class[idx] for idx in keep_idx]
-
-        # # TODO(bichen): move this color dict to configuration file
-        # cls2clr = {
-        #     'car': (255, 191, 0),
-        #     'cyclist': (0, 191, 255),
-        #     'pedestrian':(255, 0, 191)
-        # }
-        #
-        # # Draw boxes
-        # _draw_box(
-        #     im, final_boxes,
-        #     [mc.CLASS_NAMES[idx]+': (%.2f)'% prob \
-        #         for idx, prob in zip(final_class, final_probs)],
-        #     cdict=cls2clr,
-        # )
-        #
-        # file_name = os.path.split(f)[1]
-        # out_file_name = os.path.join(FLAGS.out_dir, 'out_'+file_name)
-        # cv2.imwrite(out_file_name, im)
-        # print ('Image detection output saved to {}'.format(out_file_name))
+    return (sess,mc,model)
 
 
-def main(argv=None):
-  if not tf.gfile.Exists(FLAGS.out_dir):
-    tf.gfile.MakeDirs(FLAGS.out_dir)
-  if FLAGS.mode == 'image':
-    image_demo()
-  else:
-    video_demo()
+def classify(im_path,(sess,mc,model)):
+    im = cv2.imread(im_path)
+    im = im.astype(np.float32, copy=False)
+    im = cv2.resize(im, (mc.IMAGE_WIDTH, mc.IMAGE_HEIGHT))
+    input_image = im - mc.BGR_MEANS
 
-if __name__ == '__main__':
-    tf.app.run()
+    # Detect
+    det_boxes, det_probs, det_class = sess.run(
+     [model.det_boxes, model.det_probs, model.det_class],
+     feed_dict={model.image_input:[input_image], model.keep_prob: 1.0})
+
+    # Filter
+    final_boxes, final_probs, final_class = model.filter_prediction(
+     det_boxes[0], det_probs[0], det_class[0])
+
+    keep_idx    = [idx for idx in range(len(final_probs)) \
+                        if final_probs[idx] > mc.PLOT_PROB_THRESH]
+    final_boxes = [final_boxes[idx] for idx in keep_idx]
+    final_probs = [final_probs[idx] for idx in keep_idx]
+    final_class = [final_class[idx] for idx in keep_idx]
+
+    # Extract labels + confidence values
+    res = []
+    for label, confidence in zip(final_class, final_probs):
+        res.append((label,confidence))
+    return res
+
+
+# def main(argv=None):
+#   if not tf.gfile.Exists(FLAGS.out_dir):
+#     tf.gfile.MakeDirs(FLAGS.out_dir)
+#   if FLAGS.mode == 'image':
+#     conf = startSqueezedet()
+#     #squeezeDet('./squeezeDet/data/sample.png',conf)
+#     squeezeDet('./squeezeDet/data/sample_2.png',conf)
+#   else:
+#     video_demo()
+#
+# if __name__ == '__main__':
+#     tf.app.run()

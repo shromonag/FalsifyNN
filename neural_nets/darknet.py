@@ -4,13 +4,15 @@ import pexpect
 YOLO_PATH = '/home/tommaso/darknet/gpu'
 
 # Call Yolo script and loads the neural nets weights
-def startYolo():
+def init():
+    os.chdir(YOLO_PATH)
     process = pexpect.spawn ('./darknet detect cfg/yolo.cfg yolo.weights')
     process.expect('Enter Image Path:')
     return process
 
 # Classifies the image and returns Yolo's output
-def yolo(image_path, process):
+def classify(image_path, process):
+    os.chdir(YOLO_PATH)
     process.sendline (image_path)
     process.expect('Enter Image Path:')
     stream = process.before.decode("utf-8")
@@ -31,7 +33,6 @@ def parseOut(stream):
         res.append((label,float(confidence)))
     return res
 
-os.chdir(YOLO_PATH)
-process = startYolo()
-print(yolo('data/dog.jpg', process))
-print(yolo('data/dog.jpg', process))
+#process = startYolo()
+#print(yolo('data/dog.jpg', process))
+#print(yolo('data/dog.jpg', process))
