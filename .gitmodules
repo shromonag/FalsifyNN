@@ -1,0 +1,6 @@
+[submodule "neural_nets/squeezeDet"]
+	path = neural_nets/squeezeDet
+	url = https://github.com/BichenWuUCB/squeezeDet
+[submodule "neural_nets/KittiBox"]
+	path = neural_nets/KittiBox
+	url = https://github.com/MarvinTeichmann/KittiBox
