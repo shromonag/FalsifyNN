@@ -29,8 +29,9 @@ def parseOut(stream):
     for prediction in stream:
         space = prediction.find(': ')
         label = prediction[0:space]
-        confidence = prediction[space+2:-2]
-        res.append((label,float(confidence)))
+        if label == u'car':
+            confidence = prediction[space+2:-2]
+            res.append((0,float(confidence)/100))
     return res
 
 #process = startYolo()
