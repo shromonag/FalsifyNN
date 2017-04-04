@@ -7,6 +7,7 @@ from collections import namedtuple
 from modify_primitives.components import ImageFile
 from modify_primitives import library
 import numpy as np
+from ml_primitives import uniform_sampling
 from modify_primitives.utils import coord, scale_image, fit_image, generateImage, shift_xz, modifyImageLook
 
 def populateLibrary():
@@ -34,6 +35,6 @@ def generatePicture(params,pic_path, road_type = 0, car_type = 0):
     car = Lib.getElement("cars", car_type)
     (loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
     new_image = generateImage(old_road.data, new_carimage, loc)
-    ModifiedImage = modifyImageLook(new_image, 1, 1, 0.8, 1)
+    ModifiedImage = modifyImageLook(new_image, 1, 1, 1, 1)
     #ModifiedImage.show()
     ModifiedImage.save(pic_path)

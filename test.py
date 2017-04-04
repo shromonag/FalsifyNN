@@ -1,10 +1,20 @@
-#import sys
-#sys.path.insert(0, './squeezeDet/src')
-
-from squeezedet import classify
-#from populateLibrary import generatePicture
+from populateLibrary import generatePicture
+from ml_primitives import uniform_sampling
+from neural_nets import squeezedet as nn
 
 
+PIC_PATH = '/home/tommaso/FalsifyNN/pics/out/test.png'
 
-#generatePicture((0.5,0.5),'./pics/out/new.png')
-ciao = classify.classify()
+# Initialize neural network
+conf = nn.init()
+
+# Initialize samples
+DIM = 2
+N_SAMPLES = 30
+
+samples = uniform_sampling(DIM, N_SAMPLES)
+
+# Test loop
+for sample in samples:
+    generatePicture(sample,PIC_PATH)
+    print( nn.classify(PIC_PATH,conf) )
