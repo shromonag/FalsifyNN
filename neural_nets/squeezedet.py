@@ -14,7 +14,8 @@ import tensorflow as tf
 
 # TOM: hack to import from submodule without __init.py__ (can we fix it?)
 import sys
-sys.path.append('./squeezeDet/src')
+ROOT_PATH = '/home/tommaso/FalsifyNN/neural_nets/squeezeDet/'
+sys.path.append(ROOT_PATH + 'src')
 
 from config import *
 from train import _draw_box
@@ -23,7 +24,7 @@ from nets import *
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('mode', 'image', """'image' or 'video'.""")
-tf.app.flags.DEFINE_string('checkpoint', './squeezeDet/data/model_checkpoints/squeezeDet/model.ckpt-87000',"""Path to the model parameter file.""")
+tf.app.flags.DEFINE_string('checkpoint', ROOT_PATH + 'data/model_checkpoints/squeezeDet/model.ckpt-87000',"""Path to the model parameter file.""")
 
 def init():
 
