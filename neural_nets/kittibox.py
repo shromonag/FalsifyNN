@@ -124,7 +124,8 @@ def init():
         return hypes,image_pl,prediction,sess
 
 
-def classify(input_image, (hypes,image_pl,prediction,sess)):
+def classify(input_image,(hypes,image_pl,prediction,sess)):
+    logging.info("Starting inference using {} as input".format(input_image))
 
     # Load and resize input image
     image = scp.misc.imread(input_image)

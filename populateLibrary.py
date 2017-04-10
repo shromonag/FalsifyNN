@@ -7,6 +7,7 @@ from collections import namedtuple
 from modify_primitives.components import ImageFile
 from modify_primitives import library
 import numpy as np
+from ml_primitives import uniform_sampling
 from modify_primitives.utils import coord, scale_image, fit_image, generateImage, shift_xz, modifyImageLook
 
 def populateLibrary():
