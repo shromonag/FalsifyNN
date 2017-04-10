@@ -25,15 +25,3 @@ def populateLibrary():
     Lib.addCar(ImageFile(Image.open("./pics/cars/suzuki_rear.png"), "Suzuki"))
 
     return Lib
-
-
-
-def generatePicture(params,pic_path, road_type = 0, car_type = 0):
-    Lib = populateLibrary()
-    old_road = Lib.getElement("roads", road_type)
-    car = Lib.getElement("cars", car_type)
-    (loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
-    new_image = generateImage(old_road.data, new_carimage, loc)
-    ModifiedImage = modifyImageLook(new_image, 1, 1, 0.8, 1)
-    #ModifiedImage.show()
-    ModifiedImage.save(pic_path)

@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageEnhance
 import numpy as np
 from components import ImageFile
 from collections import namedtuple
+import funcy as fn
 
 coord = namedtuple('coord', ['x', 'y'])
 
@@ -93,3 +94,15 @@ def modifyImageLook(imageData, color, contrast, brightness, sharpness):
     imageData = sharpnessMod.enhance(sharpness)
 
     return imageData
+
+
+def generatePicture(params,pic_path, road_type = 0, car_type = 0):
+    Lib = populateLibrary()
+    old_road = Lib.getElement("roads", road_type)
+    car = Lib.getElement("cars", car_type)
+    params.append(list(np.ones(6 - len(params))))
+    fn.flatten(params)
+    (loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
+    new_image = generateImage(old_road.data, new_carimage, loc)
+    ModifiedImage = modifyImageLook(new_image, params[2], params[3], params[4], params[5])
+    ModifiedImage.save(pic_path)
