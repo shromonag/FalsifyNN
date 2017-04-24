@@ -25,3 +25,4 @@ def gradient_descent(root, epsilon, cost, n_iter):
 
 
 
+

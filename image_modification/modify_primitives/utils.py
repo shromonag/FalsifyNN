@@ -8,6 +8,7 @@ from collections import namedtuple
 import funcy as fn
 
 coord = namedtuple('coord', ['x', 'y'])
+obj_element = namedtuple('obj_element', 'id coord')
 
 scaleCoord = lambda initialCoord, scale: coord(int(initialCoord.x*scale[0]), int(initialCoord.y*scale[1]))
 
@@ -96,13 +97,26 @@ def modifyImageLook(imageData, color, contrast, brightness, sharpness):
     return imageData
 
 
-def generatePicture(params,pic_path, road_type = 0, car_type = 0):
-    Lib = populateLibrary()
+def generatePicture(Lib, params, pic_path, road_type = 0, car_type = 0):
     old_road = Lib.getElement("roads", road_type)
     car = Lib.getElement("cars", car_type)
     params.append(list(np.ones(6 - len(params))))
-    fn.flatten(params)
+    params = fn.flatten(params)
     (loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
     new_image = generateImage(old_road.data, new_carimage, loc)
     ModifiedImage = modifyImageLook(new_image, params[2], params[3], params[4], params[5])
     ModifiedImage.save(pic_path)
+
+def generateGenImage(Lib, pic_path, road_type, obj_dict, other_params):
+    road = Lib.getElement("roads", road_type)
+    obj_keys = obj_dict.keys()
+    new_image = road
+    for obj in obj_keys:
+        obj = Lib.getElement(obj, obj_keys[obj].id)
+        (loc, new_obj_image) = shift_xz(new_image, obj, obj_keys[obj].coord.x, obj_keys[obj].coord.y)
+        new_image = generateImage(new_image.data, new_obj_image, loc)
+    other_params.append(list(np.ones(4 - len(other_params))))
+    other_params = fn.flatten(other_params)
+    ModifiedImage = modifyImageLook(new_image, other_params[0], other_params[1], other_params[2], other_params[3])
+    ModifiedImage.save(pic_path)
+    return ModifiedImage
