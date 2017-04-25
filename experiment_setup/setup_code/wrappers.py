@@ -6,5 +6,5 @@ def call_NN(Lib, scene, objects, out_path, other_params, NN_classify):
     image = generateGenImage(Lib, out_path, scene, objects, other_params)
     return NN_classify(out_path)
 
-def (in_path, NN_classify):
+def classify_NN(in_path, NN_classify):
     return NN_classify(in_path)
