@@ -78,8 +78,11 @@ def shift_xz(baseObject, topObject, x, z):
     new_lower = lower + slope_lr *(new_right - x_right)
 
     loc = (int(new_left), int(new_upper))
+    print(loc)
     compressedImage = topObject.data.resize((int(new_right - new_left), int(new_lower - new_upper)))
-    return (loc, compressedImage)
+
+    new_middle = (int(new_left + new_right)/2, int(new_upper + new_lower)/2)
+    return (new_middle, loc, compressedImage)
 
 def modifyImageLook(imageData, color, contrast, brightness, sharpness):
     colorMod = ImageEnhance.Color(imageData)
@@ -102,10 +105,11 @@ def generatePicture(Lib, params, pic_path, road_type = 0, car_type = 0):
     car = Lib.getElement("cars", car_type)
     params.append(list(np.ones(6 - len(params))))
     params = fn.flatten(params)
-    (loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
+    (new_middle, loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
     new_image = generateImage(old_road.data, new_carimage, loc)
     ModifiedImage = modifyImageLook(new_image, params[2], params[3], params[4], params[5])
     ModifiedImage.save(pic_path)
+    return new_middle
 
 def generateGenImage(Lib, pic_path, road_type, obj_list, other_params):
     road = Lib.getElement("roads", road_type)

@@ -29,11 +29,11 @@ def show_image(im):
     im.show()
 
 
-im = Image.open("/home/tommaso/FalsifyNN/pics/roads/desert.jpg")
-col = rgb(0,100,50)
-im = draw_circle(im,1500,1000,10,col)
-im = draw_circle(im,1400,1000,10,col)
-show_image(im)
+#im = Image.open("/home/tommaso/FalsifyNN/pics/roads/desert.jpg")
+#col = rgb(0,100,50)
+#im = draw_circle(im,1500,1000,10,col)
+#im = draw_circle(im,1400,1000,10,col)
+#show_image(im)
 
 
 
