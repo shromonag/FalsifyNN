@@ -8,7 +8,7 @@ from collections import namedtuple
 import funcy as fn
 
 coord = namedtuple('coord', ['x', 'y'])
-obj_element = namedtuple('obj_element', 'id coord')
+obj_element = namedtuple('obj_element', 'type id coord')
 
 scaleCoord = lambda initialCoord, scale: coord(int(initialCoord.x*scale[0]), int(initialCoord.y*scale[1]))
 
@@ -107,13 +107,12 @@ def generatePicture(Lib, params, pic_path, road_type = 0, car_type = 0):
     ModifiedImage = modifyImageLook(new_image, params[2], params[3], params[4], params[5])
     ModifiedImage.save(pic_path)
 
-def generateGenImage(Lib, pic_path, road_type, obj_dict, other_params):
+def generateGenImage(Lib, pic_path, road_type, obj_list, other_params):
     road = Lib.getElement("roads", road_type)
-    obj_keys = obj_dict.keys()
     new_image = road
-    for obj in obj_keys:
-        obj = Lib.getElement(obj, obj_keys[obj].id)
-        (loc, new_obj_image) = shift_xz(new_image, obj, obj_keys[obj].coord.x, obj_keys[obj].coord.y)
+    for obj in obj_list:
+        element = Lib.getElement(obj.type, obj.id)
+        (loc, new_obj_image) = shift_xz(new_image, element, obj.coord.x, obj.coord.y)
         new_image = generateImage(new_image.data, new_obj_image, loc)
     other_params.append(list(np.ones(4 - len(other_params))))
     other_params = fn.flatten(other_params)
