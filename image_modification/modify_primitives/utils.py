@@ -79,8 +79,7 @@ def shift_xz(baseObject, topObject, x, z):
     new_lower = lower + slope_lr *(new_right - x_right)
 
     loc = (int(new_left), int(new_upper))
-    print(loc)
-    compressedImage = topObject.data.resize((int(new_right - new_left), int(new_lower - new_upper)))
+    compressedImage = topObject.data.resize((max(int(new_right - new_left),1), max(int(new_lower - new_upper),1)))
 
     new_middle = (int(new_left + new_right)/2, int(new_upper + new_lower)/2)
     return (new_middle, loc, compressedImage)
