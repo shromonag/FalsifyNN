@@ -6,6 +6,7 @@ import numpy as np
 from components import ImageFile
 from collections import namedtuple
 import funcy as fn
+import copy
 
 coord = namedtuple('coord', ['x', 'y'])
 obj_element = namedtuple('obj_element', 'type id coord')
@@ -101,7 +102,8 @@ def modifyImageLook(imageData, color, contrast, brightness, sharpness):
 
 
 def generatePicture(Lib, params, pic_path, road_type = 0, car_type = 0):
-    old_road = Lib.getElement("roads", road_type)
+    road = Lib.getElement("roads", road_type)
+    old_road = copy.deepcopy(road)
     car = Lib.getElement("cars", car_type)
     params.append(list(np.ones(6 - len(params))))
     params = fn.flatten(params)
@@ -113,7 +115,7 @@ def generatePicture(Lib, params, pic_path, road_type = 0, car_type = 0):
 
 def generateGenImage(Lib, pic_path, road_type, obj_list, other_params):
     road = Lib.getElement("roads", road_type)
-    new_image = road
+    new_image = copy.deepcopy(road)
     for obj in obj_list:
         element = Lib.getElement(obj.type, obj.id)
         (loc, new_obj_image) = shift_xz(new_image, element, obj.coord.x, obj.coord.y)
