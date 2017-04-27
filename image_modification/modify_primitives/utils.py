@@ -67,15 +67,15 @@ def shift_xz(baseObject, topObject, x, z):
     # Computing (new_upper, new_left)
     new_upper = upper - (upper - baseObject.vp.y) * z
 
-    slope_ul = np.true_divide(baseObject.vp.y - upper, baseObject.vp.x - x_left)
+    slope_ul = np.true_divide(baseObject.vp.y - upper, max(baseObject.vp.x - x_left, 1))
     if slope_ul != 0:
         new_left = x_left + (new_upper - upper)/slope_ul
 
-    slope_ur = np.true_divide(baseObject.vp.y - upper, baseObject.vp.x - x_right)
+    slope_ur = np.true_divide(baseObject.vp.y - upper, max(baseObject.vp.x - x_right, 1))
     if slope_ur != 0:
         new_right = x_right + (new_upper - upper)/slope_ur
 
-    slope_lr = np.true_divide(baseObject.vp.y - lower, baseObject.vp.x - x_right)
+    slope_lr = np.true_divide(baseObject.vp.y - lower, max(baseObject.vp.x - x_right, 1))
     new_lower = lower + slope_lr *(new_right - x_right)
 
     loc = (int(new_left), int(new_upper))
