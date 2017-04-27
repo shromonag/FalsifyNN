@@ -11,6 +11,8 @@ def draw_circle(im, x, y, radius, color):
 
 # Get rgb color from range of values
 def rgb(minimum, maximum, value):
+    value = -0.5*value + 100
+    print(value)
     minimum, maximum = float(minimum), float(maximum)
     ratio = 2 * (value-minimum) / (maximum - minimum)
     b = int(max(0, 255*(1 - ratio)))
