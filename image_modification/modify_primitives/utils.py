@@ -56,7 +56,7 @@ def shift_xz(baseObject, topObject, x, z):
     x_min = baseObjectmin_x.x
     x_max = baseObjectmax_x.x - topObjectsize[0]
 
-    # For moving along the x-azix
+    # For moving along the x-axis
     x_left = x_min + int((x_max - x_min)*x)
     x_right = x_left + topObjectsize[0]
     lower = min(baseObjectmin_x.y, baseObjectmax_x.y)
@@ -67,15 +67,24 @@ def shift_xz(baseObject, topObject, x, z):
     # Computing (new_upper, new_left)
     new_upper = upper - (upper - baseObject.vp.y) * z
 
-    slope_ul = np.true_divide(baseObject.vp.y - upper, max(baseObject.vp.x - x_left, 1))
+    if baseObject.vp.x - x_left == 0:
+        slope_ul = np.true_divide(baseObject.vp.y - upper, 0.000001)
+    else:
+        slope_ul = np.true_divide(baseObject.vp.y - upper, baseObject.vp.x - x_left)
     if slope_ul != 0:
         new_left = x_left + (new_upper - upper)/slope_ul
 
-    slope_ur = np.true_divide(baseObject.vp.y - upper, max(baseObject.vp.x - x_right, 1))
+    if baseObject.vp.x - x_right == 0:
+        slope_ur = np.true_divide(baseObject.vp.y - upper, 0.000001)
+    else:
+        slope_ur = np.true_divide(baseObject.vp.y - upper, baseObject.vp.x - x_right)
     if slope_ur != 0:
         new_right = x_right + (new_upper - upper)/slope_ur
 
-    slope_lr = np.true_divide(baseObject.vp.y - lower, max(baseObject.vp.x - x_right, 1))
+    if baseObject.vp.x - x_right == 0:
+        slope_lr = np.true_divide(baseObject.vp.y - lower, 0.000001)
+    else:
+        slope_lr = np.true_divide(baseObject.vp.y - lower, baseObject.vp.x - x_right)
     new_lower = lower + slope_lr *(new_right - x_right)
 
     loc = (int(new_left), int(new_upper))
@@ -83,6 +92,15 @@ def shift_xz(baseObject, topObject, x, z):
 
     new_middle = (int(new_left + new_right)/2, int(new_upper + new_lower)/2)
     return (new_middle, loc, compressedImage)
+
+def cluster_in_abstract(base_rect, x_left, x_right, base, vp):
+    # base_rect is (min_x, min_z) (max_x, max_z)
+    # x_left corresponds to 0
+    # x_right corresponds to 1
+    # base correponds to 0
+    # vp corresponds to 1
+
+
 
 def modifyImageLook(imageData, color, contrast, brightness, sharpness):
     colorMod = ImageEnhance.Color(imageData)
