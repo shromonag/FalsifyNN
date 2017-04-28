@@ -9,9 +9,11 @@ import funcy as fn
 import copy
 
 coord = namedtuple('coord', ['x', 'y'])
+rect = namedtuple('rect', ['bottom_left', 'top_left', 'top_right', 'bottom_right'])
 obj_element = namedtuple('obj_element', 'type id coord')
 
 scaleCoord = lambda initialCoord, scale: coord(int(initialCoord.x*scale[0]), int(initialCoord.y*scale[1]))
+slope = lambda point1, point2: np.true_divide(point1.y - point2.y, point1.x - point2.x)
 
 def scale_image(originalObject, scale):
     scaledData = originalObject.data.resize([int(x) for x in np.multiply(originalObject.data.size,np.full((1,2),scale)[0])])
@@ -93,12 +95,31 @@ def shift_xz(baseObject, topObject, x, z):
     new_middle = (int(new_left + new_right)/2, int(new_upper + new_lower)/2)
     return (new_middle, loc, compressedImage)
 
-def cluster_in_abstract(base_rect, x_left, x_right, base, vp):
-    # base_rect is (min_x, min_z) (max_x, max_z)
-    # x_left corresponds to 0
-    # x_right corresponds to 1
-    # base correponds to 0
-    # vp corresponds to 1
+def cluster_in_abstract(base_rect, rect_in_abstract):
+    # Each rectangle has 4 corners bottom_left, top_left, top_right, bottom_right
+    slope_tbl = slope(base_rect.top_left, base_rect.bottom_left)
+    slope_tbr = slope(base_rect.top_right, base_rect.bottom_left)
+    z_bl = base_rect.bottom_left.y + (base_rect.top_left.y - base_rect.bottom_left.y) * rect_in_abstract.bottom_left.y
+    z_tl = base_rect.bottom_left.y + (base_rect.top_left.y - base_rect.bottom_left.y) * rect_in_abstract.top_left.y
+
+    z_tr = base_rect.bottom_right.y + (base_rect.top_right.y - base_rect.bottom_right.y) * rect_in_abstract.top_right.y
+    z_br = base_rect.bottom_right.y + (base_rect.top_right.y - base_rect.bottom_right.y) * rect_in_abstract.bottom_right.y
+
+    if slope_tbl != 0:
+        x_bl_z = base_rect.bottom_left.x + (z_bl - base_rect.bottom_left.y)/slope_tbl
+        x_tl_z = base_rect.bottom_left.x + (z_tl - base_rect.bottom_left.y)/slope_tbl
+
+    if slope_tbr != 0:
+        x_br_z = base_rect.bottom_right.x + (z_br - base_rect.bottom_right.y)/slope_tbr
+        x_tr_z = base_rect.bottom_right.x + (z_tr - base_rect.bottom_right.y)/slope_tbr
+
+    x_bl = x_bl_z + (x_br_z - x_bl_z) * rect_in_abstract.bottom_left.x
+    x_br = x_bl_z + (x_br_z - x_bl_z) * rect_in_abstract.bottom_right.x
+
+    x_tl = x_tl_z + (x_tr_z -x_tl_z) * rect_in_abstract.top_left.x
+    x_tr = x_tl_z + (x_tr_z - x_tl_z) * rect_in_abstract.top_right.x
+
+    return rect(coord(x_bl, z_bl), coord(x_tl, z_tl), coord(x_tr, z_tr), coord(x_br, z_br))
 
 
 
