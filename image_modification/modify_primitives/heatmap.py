@@ -1,3 +1,4 @@
+import csv
 from PIL import Image, ImageDraw
 
 
@@ -29,6 +30,14 @@ def save_image(im, path):
 # Show picture
 def show_image(im):
     im.show()
+
+
+# Save point
+def save_sample(x,y,file_name):
+	with open(file_name,'w+') as f:
+		writer = csv.writer(f)
+		writer.writerow(x+[y])
+	
 
 
 #im = Image.open("/home/tommaso/FalsifyNN/pics/roads/desert.jpg")
