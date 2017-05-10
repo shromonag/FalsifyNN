@@ -96,7 +96,7 @@ def shift_xz(baseObject, topObject, x, z):
     return (new_middle, loc, compressedImage)
 
 def cluster_in_abstract(base_rect, rect_in_abstract):
-    # Each rectangle has 4 corners bottom_left, top_left, top_right, bottom_right
+    # Each rectangle has 4 corners bottom_left, top_left, top_right, bottom_right each of type coord
     slope_tbl = slope(base_rect.top_left, base_rect.bottom_left)
     slope_tbr = slope(base_rect.top_right, base_rect.bottom_left)
     z_bl = base_rect.bottom_left.y + (base_rect.top_left.y - base_rect.bottom_left.y) * rect_in_abstract.bottom_left.y
