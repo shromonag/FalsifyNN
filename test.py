@@ -6,11 +6,11 @@ from populateLibrary import *
 import csv
 
 DIM = 2
-N_SAMPLES = 50
+N_SAMPLES = 100
 
 PIC_NAME_BASE = '0000000'
 OUT_PIC_PATH = './pics/out/'
-TEST_FILE_NAME = './test'
+TEST_FILE_NAME = './heat_maps/test'
 
 Lib = populateLibrary()
 
@@ -18,7 +18,7 @@ conf = nn.init()
 samples = halton_sampling(DIM, N_SAMPLES)
 
 
-for i in range(134,135):
+for i in range(134,182):
 
     out_pic_name = OUT_PIC_PATH + "tmp.png"
     pic_name = PIC_NAME_BASE + str(i) + ".png"
@@ -41,8 +41,8 @@ for i in range(134,135):
                 score = 0
         #print(score)
         col = rgb(0,100,score)
-        im = draw_circle(im, loc[0], loc[1], 5, col)	
-	w.writerow(sample+[score])
+        im = draw_circle(im, loc[0], loc[1], 5, col)
+        w.writerow(sample+[score])
 
     im.save(OUT_PIC_PATH + pic_name)
     f.close()

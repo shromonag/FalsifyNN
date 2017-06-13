@@ -44,7 +44,9 @@ def init():
     return (sess,mc,model)
 
 
-def classify(im_path,(sess,mc,model)):
+
+def classify(im_path,conf):
+    (sess,mc,model) = conf;
     im = cv2.imread(im_path)
     im = im.astype(np.float32, copy=False)
     im = cv2.resize(im, (mc.IMAGE_WIDTH, mc.IMAGE_HEIGHT))

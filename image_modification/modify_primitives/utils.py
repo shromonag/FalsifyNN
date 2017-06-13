@@ -49,6 +49,7 @@ def generateImage(baseObject, topObject, loc):
     mask = Image.new('L', topObject.size, color = 0)
     mask.putdata(maskValues)
     baseObject.paste(topObject, loc, mask)
+    #baseObject.paste(topObject, loc, topObject)
     return baseObject
 
 def shift_xz(baseObject, topObject, x, z):
