@@ -1,4 +1,10 @@
-# This file implements bayesian optimization and search on the Neural network input soce.
+# This file implements bayesian optimization and search on the Neural network input space
+# Example usage:
+# input_dim is the area of search space. If only x, z enter only 2
+# BO = bo_class(input_dim=2)
+# BO.init_BO(f=classify)
+# BO.run_BO()
+# BO.print_output(fix_output=(0, 0.5)) # To fix x at 0.5
 
 import GPyOpt
 import numpy as np
