@@ -93,8 +93,10 @@ def shift_xz(baseObject, topObject, x, z):
     loc = (int(new_left), int(new_upper))
     compressedImage = topObject.data.resize((max(int(new_right - new_left),1), max(int(new_lower - new_upper),1)))
 
-    new_middle = (int(new_left + new_right)/2, int(new_upper + new_lower)/2)
-    return (new_middle, loc, compressedImage)
+    new_coords = [new_left,new_upper,new_right,new_lower]
+    new_coords = [ int(x) for x in new_coords ]
+
+    return (new_coords, loc, compressedImage)
 
 def cluster_in_abstract(base_rect, rect_in_abstract):
     # Each rectangle has 4 corners bottom_left, top_left, top_right, bottom_right each of type coord
@@ -146,11 +148,11 @@ def generatePicture(Lib, params, pic_path, road_type = 0, car_type = 0):
     car = Lib.getElement("cars", car_type)
     params.append(list(np.ones(6 - len(params))))
     params = fn.flatten(params)
-    (new_middle, loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
+    (new_coords, loc, new_carimage) = shift_xz(old_road, car, params[0], params[1])
     new_image = generateImage(old_road.data, new_carimage, loc)
     ModifiedImage = modifyImageLook(new_image, params[2], params[3], params[4], params[5])
     ModifiedImage.save(pic_path)
-    return new_middle
+    return new_coords
 
 def generateGenImage(Lib, pic_path, road_type, obj_list, other_params):
     road = Lib.getElement("roads", road_type)
