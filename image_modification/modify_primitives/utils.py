@@ -94,9 +94,15 @@ def shift_xz(baseObject, topObject, x, z):
     compressedImage = topObject.data.resize((max(int(new_right - new_left),1), max(int(new_lower - new_upper),1)))
 
     new_coords = [new_left,new_upper,new_right,new_lower]
-    new_coords = [ int(x) for x in new_coords ]
 
-    return (new_coords, loc, compressedImage)
+    x_len = new_right - new_left
+    y_len = new_lower - new_upper
+    x_c = new_left + (x_len/2)
+    y_c = new_upper + (y_len / 2)
+
+    new_box = [x_c, y_c, x_len, y_len]
+    new_box = [ int(x) for x in new_box ]
+    return new_box, loc, compressedImage
 
 def cluster_in_abstract(base_rect, rect_in_abstract):
     # Each rectangle has 4 corners bottom_left, top_left, top_right, bottom_right each of type coord

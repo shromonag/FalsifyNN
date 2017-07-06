@@ -6,65 +6,55 @@ from populateLibrary import *
 from shutil import copyfile
 import csv
 
-DIM = 5
+DIM = 2
 N_SAMPLES = 1000
-FOOL_PICS = 100
 
-FOOL_PIC_PATH = './pics/out/fool/'
-NOTFOOL_PIC_PATH = './pics/out/notfool/'
+PIC_PATH = './pics/out/squeezetest/'
 
-car_names = ['suzuki', 'tesla', ]
-
-
-GEN_FILE_NAME = 'hill_chrysler_'
+roads = ['bridge', 'tunnel','island','country','hill']
+cars = ['fiat','honda','toyota','peugeot','chrysler']
 
 Lib = populateLibrary()
-
 conf = nn.init()
 samples = halton_sampling(DIM, N_SAMPLES)
 
-# set a limit to z
+
+#for road_i in range(57,62):
+#    for car_i in range(7,12):
+
+car_i = 7
+road_i = 61
+
+car = cars[car_i-7]
+road = roads[road_i-57]
+
+print road + " / " + car
+
+gen_file_name = road + '_' + car + '_'
+
 Z_LIMIT = 0.5
 
-
-
-i_fool = 0      # number of fooling pics
-i_not_fool = 0  # number of not fooling pics
+pic_idx = 0
 
 for sample in samples:
+    out_pic_name = gen_file_name + "tmp.png"
 
-    sample[1] = sample[1]*Z_LIMIT
-    out_pic_name = GEN_FILE_NAME + "tmp.png"
+    real_box = generatePicture(Lib, [sample[0], sample[1]*Z_LIMIT, 1, 1, 1, 1], out_pic_name, road_i, car_i)
+    (boxes,probs,cats) = nn.classify(out_pic_name, conf)
 
+    copyfile(out_pic_name, PIC_PATH + "pics/" + gen_file_name + str(pic_idx) + ".png")
 
-    box = generatePicture(Lib, [sample[0], sample[1], sample[2]*0.25 + 0.5, 1, 1, 1], out_pic_name, 61, 11)
-
-    confidence = nn.classify(out_pic_name, conf)
-    print confidence
-
-    pic_idx = 0
-    OUT_PIC_PATH = ""
-    if (len(confidence) == 1) and (confidence[0][0] == 0):
-        i_not_fool = i_not_fool + 1
-        pic_idx = i_not_fool
-        OUT_PIC_PATH = NOTFOOL_PIC_PATH
-    else:
-        i_fool = i_fool + 1
-        pic_idx = i_fool
-        OUT_PIC_PATH = FOOL_PIC_PATH
-
-
-    copyfile(out_pic_name, OUT_PIC_PATH + "pics/" + GEN_FILE_NAME + str(pic_idx) + ".png")
-
-    f = open(OUT_PIC_PATH + "labels/" + GEN_FILE_NAME + str(pic_idx) + ".txt",'w+')
+    f = open(PIC_PATH + "labels/" + gen_file_name + str(pic_idx) + ".csv",'w+')
     w = csv.writer(f)
 
-    print(box)
+    w.writerow([0,1] + real_box)
 
-    w.writerow(box)
+    for box,prob,cat in zip(boxes,probs,cats):
+        row = [cat,prob]
+        for b in box:
+            row += [b]
+        w.writerow(row)
+
     f.close()
 
-    if i_fool == FOOL_PICS:
-        break
-
-    print str(i_fool) + " / " + str(i_not_fool)
+    pic_idx = pic_idx + 1

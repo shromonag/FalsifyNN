@@ -61,17 +61,23 @@ def classify(im_path,conf):
     final_boxes, final_probs, final_class = model.filter_prediction(
      det_boxes[0], det_probs[0], det_class[0])
 
-    keep_idx    = [idx for idx in range(len(final_probs)) \
-                        if final_probs[idx] > mc.PLOT_PROB_THRESH]
+    #keep_idx    = [idx for idx in range(len(final_probs)) \
+    #                   if final_probs[idx] > mc.PLOT_PROB_THRESH]
+
+    keep_idx = [idx for idx in range(len(final_probs)) \
+                if final_probs[idx] > 0.1]
+
     final_boxes = [final_boxes[idx] for idx in keep_idx]
     final_probs = [final_probs[idx] for idx in keep_idx]
     final_class = [final_class[idx] for idx in keep_idx]
 
-    # Extract labels + confidence values
-    res = []
-    for label, confidence in zip(final_class, final_probs):
-        res.append((label,confidence))
-    return res
+    # # Extract labels + confidence values
+    # res = []
+    # for label, confidence, box in zip(final_class, final_probs, final_boxes):
+    #     res.append((label,confidence,box))
+    # return res
+
+    return (final_boxes,final_probs,final_class)
 
 
 # def main(argv=None):
