@@ -1,6 +1,7 @@
-from neural_nets import squeezedet as nn
 from modify_primitives.utils import *
+from modify_primitives.clustering_bo import *
 from populateLibrary import *
+from neural_nets import squeezedet as nn
 
 
 
@@ -8,12 +9,13 @@ from populateLibrary import *
 # params[1]: car y pos
 # scene[0]: road
 # scene[1]: car
-def foo(params,scene):
+def wrapper(params):
     Lib = populateLibrary()
-    conf = nn.init()
+
+    params = params[0]
 
     out_pic_name = "tmp.png"
-    real_box = generatePicture(Lib, [params[0], params[1], 1, 1, 1, 1], out_pic_name, scene[0], scene[1])
+    real_box = generatePicture(Lib, [params[0], params[1], 1, 1, 1, 1], out_pic_name, 58, 10)
     (boxes,probs,cats) = nn.classify(out_pic_name, conf)
 
     # extract max prob box
@@ -29,8 +31,11 @@ def foo(params,scene):
 
 
 
+conf = nn.init()
 
-from modify_primitives import clustering_bo as BO
+opt = bo_class(input_dim=2)
+opt.init_BO(f=wrapper)
 
-bo = BO.bo_class()
-BO.init_BO(foo)
+for _ in range(10):
+    opt.run_BO(max_iter=1)
+    print opt.bo.suggested_sample
