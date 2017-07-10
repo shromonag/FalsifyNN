@@ -22,8 +22,8 @@ samples = halton_sampling(DIM, N_SAMPLES)
 #for road_i in range(57,62):
 #    for car_i in range(7,12):
 
-car_i = 7
-road_i = 61
+car_i = 8
+road_i = 59
 
 car = cars[car_i-7]
 road = roads[road_i-57]
@@ -32,7 +32,7 @@ print road + " / " + car
 
 gen_file_name = road + '_' + car + '_'
 
-Z_LIMIT = 0.5
+Z_LIMIT = 0.85
 
 pic_idx = 0
 

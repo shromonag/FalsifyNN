@@ -30,14 +30,55 @@ def parseOut(stream):
 
     # Extract labels + confidence values
     res = []
-    for prediction in stream:
-        space = prediction.find(': ')
-        label = prediction[0:space]
-        if label == u'car':
-            confidence = prediction[space+2:-2]
-            res.append((0,float(confidence)/100))
+    # for prediction in stream:
+    for _ in range(len(stream)/11):
+
+        # get label
+        token = stream.pop(0)
+        space = token.find(': ')
+        label = token[0:space]
+        prob = float(token[(space+2):len(token)-2])/100
+
+        # skip line
+        token = stream.pop(0)
+        # skip i
+        token = stream.pop(0)
+
+        # skip line
+        token = stream.pop(0)
+        # get left box
+        token = stream.pop(0)
+        left = float(token[5:])
+
+        # skip line
+        token = stream.pop(0)
+        # get right box
+        token = stream.pop(0)
+        right = float(token[6:])
+
+        # skip line
+        token = stream.pop(0)
+        # get top box
+        token = stream.pop(0)
+        top = float(token[4:])
+
+        # skip line
+        token = stream.pop(0)
+        # get bot box
+        token = stream.pop(0)
+        bot = float(token[4:])
+
+        x_len = right-left
+        y_len = bot-top
+        x_c = left+(x_len/2)
+        y_c = top+(y_len/2)
+
+        if label=='car':
+            res.append((0,prob,x_c,y_c,x_len,y_len))
+        if label=='bicycle':
+            res.append((1,prob,x_c,y_c,x_len,y_len))
+
     return res
 
-#process = startYolo()
-#print(yolo('data/dog.jpg', process))
-#print(yolo('data/dog.jpg', process))
+process = init()
+print(classify('data/dog.jpg', process))
